@@ -206,7 +206,7 @@ async def new(ctx, *, type = None):
         embed.set_footer(text=f"Thank you for choosing {ctx.message.guild.name}")
         role = discord.utils.get(guild.roles, name='Support')
 
-        await channel.send(content=f"{role.mention}",embed=embed)
+        await channel.send(content=f"<@&{role.id}>",embed=embed)
 
 
 
