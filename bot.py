@@ -30,9 +30,11 @@ async def setstatus(ctx, type, *, name):
 
 @bot.event
 async def on_ready():
+    global ver
     print(chalk.green("Ready to go!"))
     print(chalk.blue(f"Serving: {len(bot.guilds)} guilds."))
     await bot.change_presence(status=discord.Status.online, activity=discord.Game(name="Tick Tick"))
+    ver = "Beta 1.0.0"
 
 @bot.command()
 @commands.has_any_role("Support")
@@ -215,10 +217,11 @@ async def new(ctx, *, type = None):
 
         await ctx.channel.send(embed=embed)
 @bot.command()
-async def help(ctx,):
+async def help(ctx):
+    global ver
     embed = discord.Embed(title="Help for tickets", colour=discord.Colour(0xffff), description="This is all you need to know for making tickets")
 
-    embed.set_footer(text="Nite bot | {ver}")
+    embed.set_footer(text=f"Tick Tick | {ver}")
 
     embed.add_field(name="-new <name>", value="Makes a new ticket", inline=True)
     embed.add_field(name="-close", value="Closes an open ticket", inline=True)
