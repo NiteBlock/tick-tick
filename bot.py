@@ -214,7 +214,19 @@ async def new(ctx, *, type = None):
         embed = discord.Embed(title="Please tell us what you need", colour=discord.Colour(0xf6ff), description="eg. -new Discord Bot")
 
         await ctx.channel.send(embed=embed)
+@bot.command()
+async def help(ctx,):
+    embed = discord.Embed(title="Help for tickets", colour=discord.Colour(0xffff), description="This is all you need to know for making tickets")
 
+    embed.set_footer(text="Nite bot | {ver}")
+
+    embed.add_field(name="-new <name>", value="Makes a new ticket", inline=True)
+    embed.add_field(name="-close", value="Closes an open ticket", inline=True)
+    embed.add_field(name="-add <user>", value="Adds a user to your ticket", inline=True)
+    embed.add_field(name="-remove <user>", value="removes a user from your ticket", inline=True)
+    embed.add_field(name="-apply <job>", value="Applies you for a job", inline=True)
+    embed.add_field(name="-withdraw", value="withdraws your application for a job", inline=True)
+    await ctx.channel.send(embed=embed)
 
 @bot.command()
 async def user(ctx, member:discord.User = None):
