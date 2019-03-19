@@ -232,6 +232,21 @@ async def help(ctx):
     await ctx.channel.send(embed=embed)
 
 @bot.command()
+async def invite(ctx):
+    global ver
+    embed = discord.Embed(title="Invite the bot", colour=discord.Colour(0x29ff00), description="[Click here to invite the bot](https://discordapp.com/api/oauth2/authorize?client_id=557154903563304960&permissions=268823672&redirect_uri=https%3A%2F%2Fdiscord.gg%2FY5ereeE&scope=bot)")
+
+    embed.set_footer(text=f"Tick tick | {ver}")
+
+@bot.command()
+async def support(ctx):
+    global ver
+    embed = discord.Embed(title="Invite the bot", colour=discord.Colour(0x29ff00), description="[Click here to go into our support server](https://discord.ggKs43Av4)")
+
+    embed.set_footer(text=f"Tick tick | {ver}")
+
+
+@bot.command()
 async def user(ctx, member:discord.User = None):
     if member == None:
         member = ctx.message.author
