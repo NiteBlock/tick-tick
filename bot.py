@@ -41,7 +41,7 @@ async def on_ready():
     ver = "Beta 1.0.0"
 
 @bot.command()
-@commands.has_any_role("Support")
+@commands.has_permissions(manage_server=True)
 async def setup(ctx):
 
     guild = ctx.message.guild
@@ -53,7 +53,8 @@ async def setup(ctx):
         embed = discord.Embed(title="Making ticket category", color=discord.Colour(0xFF0000))
         
         await msg.edit(embed=embed)
-        await guild.create_category_channel("Tickets")
+        tickets = await guild.create_category_channel("Tickets")
+        await tickets.set_permissions(everyone=False)
     else:
         embed = discord.Embed(title="Making ticket category", color=discord.Colour(0xFF0000))
         
@@ -78,7 +79,7 @@ async def setup(ctx):
         embed = discord.Embed(title="Category already made", color=discord.Colour(0xFF0000))
         await msg.edit(embed=embed)
     
-    embed = discord.Embed(title="Done", color=discord.Colour(0x00ff00), description="Do -help to get started")
+    embed = discord.Embed(title="Done! make sure you set the permsissions for the categories", color=discord.Colour(0x00ff00), description="Do -help to get started")
     embed.set_footer(text="We have finished setting things up for you")
 
     await msg.edit(embed=embed)
