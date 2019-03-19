@@ -47,7 +47,7 @@ async def setup(ctx):
     guild = ctx.message.guild
     embed = discord.Embed(title="Setting things up", color=discord.Colour(0xFF0000))
     msg = await ctx.channel.send(embed=embed)
-    tickets = discord.utils.get(guild.categories, "Tickets")
+    tickets = discord.utils.get(guild.categories, name="Tickets")
     if tickets != None:
         embed = discord.Embed(title="Setting things up", color=discord.Colour(0xFF0000))
    
@@ -158,8 +158,24 @@ async def on_guild_join(guild):
 
     embed.set_footer(text=f"Tick tick | {ver}")
 
-    embed.add_field(name=f"Name: {guild.name}", value=f"With the id of {guild.id}", inline=True)
-    embed.add_field(name=f"Owner: {user.name}", value=f"With the id of {user.id}", inline=True)
+    embed.add_field(name=f"Name: {guild.name}", value=f"Id: {guild.id}")
+    embed.add_field(name=f"Owner: {user.name}", value=f"Id: {user.id}")
+    await channel.send(embed=embed)
+
+@bot.event
+async def on_guild_remove(guild):
+    embed = discord.Embed(title="Hey there", colour=discord.Colour(0xffff), description="Why did you remove me?")
+
+
+    user = bot.get_user(guild.owner.id)
+    await user.send(embed=embed)
+    channel = bot.get_channel(557474056371437568)
+    embed = discord.Embed(title="Added to a server", colour=discord.Colour(0xffff), description=f"Total servers {len(bot.guilds)}")
+
+    embed.set_footer(text=f"Tick tick | {ver}")
+
+    embed.add_field(name=f"Name: {guild.name}", value=f"Id: {guild.id}")
+    embed.add_field(name=f"Owner: {user.name}", value=f"Id: {user.id}")
     await channel.send(embed=embed)
 
 
