@@ -41,7 +41,7 @@ async def on_ready():
     ver = "Beta 1.0.0"
 
 @bot.command()
-@commands.has_permissions(manage_server=True)
+@commands.has_permissions(manage_guild=True)
 async def setup(ctx):
 
     guild = ctx.message.guild
