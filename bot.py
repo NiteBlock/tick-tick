@@ -98,11 +98,8 @@ async def ping(ctx):
 
 
 @bot.command()
-async def close(ctx, closemember:discord.User = None):
-    if closemember == None:
-        user = bot.get_user(ctx.message.author.id)
-    else:
-        user = bot.get_user(closemember.id)
+async def close(ctx):
+
     
     channel = bot.get_channel(ctx.channel.id)
     if channel.category.name == "Tickets":
