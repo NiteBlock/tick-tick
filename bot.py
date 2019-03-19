@@ -140,10 +140,27 @@ async def withdraw(ctx):
 
 @bot.event
 async def on_guild_join(guild):
-    owner = bot.get_user(guild.owner.id)
-    owner.send("Thanks for adding our bot")
+    embed = discord.Embed(title="Thank you for adding me", colour=discord.Colour(0xffff), description="This is the commands availible:")
+
+    embed.set_footer(text="Tick tick | {ver}")
+
+    embed.add_field(name="-new <name>", value="Makes a new ticket", inline=True)
+    embed.add_field(name="-close", value="Closes an open ticket", inline=True)
+    embed.add_field(name="-add <user>", value="Adds a user to your ticket", inline=True)
+    embed.add_field(name="-remove <user>", value="removes a user from your ticket", inline=True)
+    embed.add_field(name="-apply <job>", value="Applies you for a job", inline=True)
+    embed.add_field(name="-withdraw", value="withdraws your application for a job", inline=True)
+    embed.add_field(name="-setup", value="Sets up the server with all channels, etc.", inline=True)
+    user = bot.get_user(guild.owner.id)
+    await user.send(embed=embed)
     channel = bot.get_channel(557474056371437568)
-    await channel.send(f"The bot was just added to a server called {guild.name}")
+    embed = discord.Embed(title="Added to a server", colour=discord.Colour(0xffff), description=f"Total servers {len(bot.guilds)}")
+
+    embed.set_footer(text=f"Tick tick | {ver}")
+
+    embed.add_field(name=f"Name: {guild.name}", value=f"With the id of {guild.id}", inline=True)
+    embed.add_field(name=f"Owner: {user.name}", value=f"With the id of {user.id}", inline=True)
+    await channel.send(embed=embed)
 
 
 @bot.command(aliases=["app", "application"])
