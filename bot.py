@@ -54,7 +54,6 @@ async def setup(ctx):
         
         await msg.edit(embed=embed)
         tickets = await guild.create_category_channel("Tickets")
-        await tickets.set_permissions(everyone=False)
     else:
         embed = discord.Embed(title="Making ticket category", color=discord.Colour(0xFF0000))
         
