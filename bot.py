@@ -23,6 +23,10 @@ async def setstatus(ctx, type, *, name):
         elif type == "playing":
             await bot.change_presence(activity=discord.Game(name=f"{name}"))
             await ctx.channel.send(f"Set the status to **playing {name}**")
+        elif type == "show":
+            if name == "guilds":
+                await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching,name=f"{len(bot.guilds)} servers"))
+                await ctx.channel.send(f"Set the status to **playing {name}**")
         else:
             await ctx.channel.send("Not a valid type of status")
     else:
@@ -113,6 +117,7 @@ async def withdraw(ctx):
         def check(m):
             global response
             response = m.content.lower()
+            print(response) 
             return m.channel == channel
 
         await asyncio.sleep(0.1)
@@ -128,6 +133,13 @@ async def withdraw(ctx):
         await ctx.channel.send("This is not a application...")
 
 
+
+@bot.event
+async def on_guild_join(guild):
+    owner = bot.get_user(guild.onwner.id)
+    owner.send("Thanks for adding our bot")
+    channel = bot.get_channel(557474056371437568)
+    await channel.send(f"The bot was just added to a server called {guild.name}")
 
 
 @bot.command(aliases=["app", "application"])
