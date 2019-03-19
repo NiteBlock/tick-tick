@@ -26,7 +26,7 @@ async def setstatus(ctx, type, *, name):
         elif type == "show":
             if name == "guilds":
                 await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching,name=f"{len(bot.guilds)} servers"))
-                await ctx.channel.send(f"Set the status to **playing {name}**")
+                await ctx.channel.send(f"Set the status to **watching `guild amount` servers**")
         else:
             await ctx.channel.send("Not a valid type of status")
     else:
@@ -46,9 +46,13 @@ async def setup(ctx):
 
     guild = ctx.message.guild
     embed = discord.Embed(title="Setting things up", color=discord.Colour(0xFF0000))
-    tickets = discord.utils.get(guild.text_channels, "")
     msg = await ctx.channel.send(embed=embed)
-    await guild.create_category_channel("Tickets")
+    tickets = discord.utils.get(guild.categories, "Tickets")
+    if tickets != None:
+        embed = discord.Embed(title="Setting things up", color=discord.Colour(0xFF0000))
+   
+        await msg.edit()
+        await guild.create_category_channel("Tickets")
     await guild.create_category_channel("Applications")
     embed = discord.Embed(title="Done", color=discord.Colour(0x00ff00), description="Do -help to get started")
     embed.set_footer(text="We have finished setting things up for you")
@@ -136,7 +140,7 @@ async def withdraw(ctx):
 
 @bot.event
 async def on_guild_join(guild):
-    owner = bot.get_user(guild.onwner.id)
+    owner = bot.get_user(guild.owner.id)
     owner.send("Thanks for adding our bot")
     channel = bot.get_channel(557474056371437568)
     await channel.send(f"The bot was just added to a server called {guild.name}")
