@@ -201,7 +201,6 @@ async def new(ctx, *, type = None):
         await ctx.channel.send(embed=embed)
         embed = discord.Embed(title=f"{ctx.message.author.name}, We will get right back to you ", colour=discord.Colour(0xff00), description="Your ticket has been created. We will come right back to you! In the mean time please describe your questions thoroughly.")
 
-        embed.add_field(name="To get faster support check out #prices", value="We will get back to you faster than other custumers", inline=False)
 
         embed.set_thumbnail(url=f"{ctx.message.author.avatar_url}")
         embed.set_author(name=f"{type}")
@@ -243,7 +242,7 @@ async def invite(ctx):
 @bot.command()
 async def support(ctx):
     global ver
-    embed = discord.Embed(title="Invite the bot", colour=discord.Colour(0x29ff00), description="[Click here to go into our support server](https://discord.ggKs43Av4)")
+    embed = discord.Embed(title="Get support for the bot", colour=discord.Colour(0x29ff00), description="[Click here to go into our support server](https://discord.ggKs43Av4)")
 
     embed.set_footer(text=f"Tick tick | {ver}")
     await ctx.send(embed=embed)
