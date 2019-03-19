@@ -39,8 +39,10 @@ async def on_ready():
 @bot.command()
 @commands.has_any_role("Support")
 async def setup(ctx):
+
     guild = ctx.message.guild
     embed = discord.Embed(title="Setting things up", color=discord.Colour(0xFF0000))
+    tickets = discord.utils.get(guild.text_channels, "")
     msg = await ctx.channel.send(embed=embed)
     await guild.create_category_channel("Tickets")
     await guild.create_category_channel("Applications")
@@ -104,12 +106,23 @@ async def close(ctx, closemember:discord.User = None):
 
 @bot.command()
 async def withdraw(ctx):
-    
-    channel = bot.get_channel(ctx.channel.id)
+
     if channel.category.name == "Applications":
-        await channel.delete()
-        embed = discord.Embed(title="Your application has been closed", colour=discord.Colour(0xf6ff), description=f"Thank you for using {ctx.message.guild.name}")
-        await user.send(embed=embed)
+        await ctx.channel.send("Please type `confirm` if you wish to close this application")
+        def check(m):
+            global response
+            response = m.content.lower()
+            return m.channel == channel
+
+        channel = bot.get_channel(ctx.channel.id)       
+        msg = await client.wait_for('message', check=check)
+
+        if response == "confirm":
+            await channel.delete()
+            embed = discord.Embed(title="Your application has been closed", colour=discord.Colour(0xf6ff), description=f"Thank you for using {ctx.message.guild.name}")
+            await user.send(embed=embed)
+        else:
+            await ctx.channel.send("Your application wasn't closed")
     else:
         await ctx.channel.send("This is not a application...")
 
