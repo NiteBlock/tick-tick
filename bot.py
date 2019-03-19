@@ -48,12 +48,36 @@ async def setup(ctx):
     embed = discord.Embed(title="Setting things up", color=discord.Colour(0xFF0000))
     msg = await ctx.channel.send(embed=embed)
     tickets = discord.utils.get(guild.categories, name="Tickets")
-    if tickets != None:
-        embed = discord.Embed(title="Setting things up", color=discord.Colour(0xFF0000))
-   
-        await msg.edit()
+    await asyncio.sleep(1)
+    if tickets == None:
+        embed = discord.Embed(title="Making ticket category", color=discord.Colour(0xFF0000))
+        
+        await msg.edit(embed=embed)
         await guild.create_category_channel("Tickets")
-    await guild.create_category_channel("Applications")
+    else:
+        embed = discord.Embed(title="Making ticket category", color=discord.Colour(0xFF0000))
+        
+        await msg.edit(embed=embed)
+        await asyncio.sleep(0.3)
+
+        embed = discord.Embed(title="Category already made", color=discord.Colour(0xFF0000))
+        await msg.edit(embed=embed)
+
+    apps = discord.utils.get(guild.categories, name="Applications")
+    if apps == None:
+        embed = discord.Embed(title="Making applications category", color=discord.Colour(0xFF0000))
+        
+        await msg.edit(embed=embed)
+        await guild.create_category_channel("Applications")
+    else:
+        embed = discord.Embed(title="Making applications category", color=discord.Colour(0xFF0000))
+        
+        await msg.edit(embed=embed)
+        await asyncio.sleep(0.3)
+
+        embed = discord.Embed(title="Category already made", color=discord.Colour(0xFF0000))
+        await msg.edit(embed=embed)
+    
     embed = discord.Embed(title="Done", color=discord.Colour(0x00ff00), description="Do -help to get started")
     embed.set_footer(text="We have finished setting things up for you")
 
