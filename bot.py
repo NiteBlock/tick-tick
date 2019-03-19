@@ -106,6 +106,7 @@ async def close(ctx, closemember:discord.User = None):
 
 @bot.command()
 async def withdraw(ctx):
+    channel = bot.get_channel(ctx.channel.id)       
 
     if channel.category.name == "Applications":
         await ctx.channel.send("Please type `confirm` if you wish to close this application")
@@ -114,7 +115,7 @@ async def withdraw(ctx):
             response = m.content.lower()
             return m.channel == channel
 
-        channel = bot.get_channel(ctx.channel.id)       
+        await asyncio.sleep(0.1)
         msg = await client.wait_for('message', check=check)
 
         if response == "confirm":
