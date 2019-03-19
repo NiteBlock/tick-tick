@@ -192,7 +192,7 @@ async def on_guild_remove(guild):
     user = bot.get_user(guild.owner.id)
     await user.send(embed=embed)
     channel = bot.get_channel(557474056371437568)
-    embed = discord.Embed(title="Added to a server", colour=discord.Colour(0xffff), description=f"Total servers {len(bot.guilds)}")
+    embed = discord.Embed(title="Removed to a server", colour=discord.Colour(0x00ffff), description=f"Total servers {len(bot.guilds)}")
 
     embed.set_footer(text=f"Tick tick | {ver}")
 
