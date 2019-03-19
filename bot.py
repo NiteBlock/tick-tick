@@ -317,7 +317,7 @@ async def help(ctx):
 @bot.command()
 async def bug(ctx, *, name):
     channel = bot.get_channel(557505096557264896)
-    await ctx.send("Your suggestion has been sent")
+    await ctx.send(f"Your bug has been sent to {channel.mention}")
     embed = discord.Embed(title=f"{ctx.mesage.author.name} reported a bug", colour=discord.Colour(0xffff), description=f"{name}")
     await channel.send(embed=embed)
 
