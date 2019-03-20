@@ -131,15 +131,15 @@ async def close(ctx):
         def check(m):
             return m.content == 'confirm' and m.channel == channel
 
-        try:
-            msg = await client.wait_for('message', check=check)
-        except asyncio.TimeoutError:
-            await channel.send('Your ticket failed to delete')
-        else:
-            await channel.send('Your ticket will be closed')
-            await channel.delete()
-            embed = discord.Embed(title="Your ticket has been closed", colour=discord.Colour(0xf6ff), description=f"Thank you for using {ctx.message.guild.name}")
-            await user.send(embed=embed)
+
+        msg = await bot.wait_for('message', check=check)
+
+        await channel.send('Your ticket failed to delete')
+
+        await channel.send('Your ticket will be closed')
+        await channel.delete()
+        embed = discord.Embed(title="Your ticket has been closed", colour=discord.Colour(0xf6ff), description=f"Thank you for using {ctx.message.guild.name}")
+        await user.send(embed=embed)
     else:
         await ctx.channel.send("This is not a ticket...")
 
