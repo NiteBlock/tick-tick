@@ -126,15 +126,13 @@ async def close(ctx):
 
     channel = bot.get_channel(ctx.channel.id)
     if channel.category.name == "Tickets":
-        await ctx.channel.send("Please type **confirm** to close your ticket")
+        await ctx.channel.send("Please type **-confirm** to close your ticket")
         
         def check(m):
-            return m.content == 'confirm' and m.channel == channel
+            return m.content == '-confirm' and m.channel == channel
 
 
         msg = await bot.wait_for('message', check=check)
-
-        await channel.send('Your ticket failed to delete')
 
         await channel.send('Your ticket will be closed')
         await channel.delete()
