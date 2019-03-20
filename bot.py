@@ -77,7 +77,28 @@ async def setup(ctx):
 
         embed = discord.Embed(title="Category already made", color=discord.Colour(0xFF0000))
         await msg.edit(embed=embed)
-    
+    support = discord.utils.get(guild.roles, name="Support")
+    if support != None:
+        await asyncio.sleep(0.5)
+
+        embed = discord.Embed(title="Making support role", color=discord.Colour(0xFF0000))
+        
+        await msg.edit(embed=embed)
+        await asyncio.sleep(0.6)
+
+        embed = discord.Embed(title="Category already made", color=discord.Colour(0xFF0000))
+        await msg.edit(embed=embed)
+    else:
+        await asyncio.sleep(0.4)
+
+        embed = discord.Embed(title="Making applications category", color=discord.Colour(0xFF0000))
+        await asyncio.sleep(0.7)
+
+        await msg.edit(embed=embed)
+        support = await guild.create_role(name="Support")
+        await ctx.message.author.add_roles(support)
+
+
     embed = discord.Embed(title="Done! make sure you set the permsissions for the categories", color=discord.Colour(0x00ff00), description="Do -help to get started")
     embed.set_footer(text="We have finished setting things up for you")
 
