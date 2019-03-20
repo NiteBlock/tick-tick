@@ -124,12 +124,23 @@ async def ping(ctx):
 @bot.command()
 async def close(ctx):
 
-    
     channel = bot.get_channel(ctx.channel.id)
     if channel.category.name == "Tickets":
-        await channel.delete()
-        embed = discord.Embed(title="Your ticket has been closed", colour=discord.Colour(0xf6ff), description=f"Thank you for using {ctx.message.guild.name}")
-        await user.send(embed=embed)
+        await ctx.channel.send("Please type **confirm** to close your ticket")
+        
+        def check(m):
+            return m.content == 'confirm' and m.channel == channel
+
+        try:
+            user = await client.wait_for('message', timeout=60.0, check=check)
+        except asyncio.TimeoutError:
+            await channel.send('Your message failed to delete')
+        else:
+            await channel.send('Your ticket will be closed')
+
+            await channel.delete()
+            embed = discord.Embed(title="Your ticket has been closed", colour=discord.Colour(0xf6ff), description=f"Thank you for using {ctx.message.guild.name}")
+            await user.send(embed=embed)
     else:
         await ctx.channel.send("This is not a ticket...")
 
@@ -255,16 +266,7 @@ async def remove(ctx, person:discord.User):
         else:
             await ctx.channel.send("This is not a ticket...")
 
-@bot.command()
-@commands.has_any_role("Support")
-async def claim(ctx, id:int):
-    channel = bot.get_channel(id)
-    if channel.category.name == "Tickets":
-        await channel.set_permissions(ctx.message.author, read_messages=True, send_messages=True) 
-        await ctx.channel.send(f"You have claimed {channel.mention}")
-        await channel.send(f"{ctx.message.author.mention} is now assigned to your ticket")
-    else:
-        await ctx.channel.send("You cant claim this")
+
 
 
 @bot.command(aliases=["tickets", "ticket", "make", "order"])
@@ -300,6 +302,10 @@ async def new(ctx, *, type = None):
         embed = discord.Embed(title="Please tell us what you need", colour=discord.Colour(0xf6ff), description="eg. -new Discord Bot")
 
         await ctx.channel.send(embed=embed)
+
+
+
+
 @bot.command()
 async def help(ctx):
     global ver
