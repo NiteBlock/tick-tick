@@ -132,7 +132,7 @@ async def close(ctx):
             return m.content == 'confirm' and m.channel == channel
 
         try:
-            user = await client.wait_for('message', timeout=60.0, check=check)
+            await client.wait_for('message', timeout=60.0, check=check)
         except asyncio.TimeoutError:
             await channel.send('Your message failed to delete')
         else:
