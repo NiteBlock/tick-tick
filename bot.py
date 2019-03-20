@@ -88,6 +88,8 @@ async def setup(ctx):
 
         embed = discord.Embed(title="Category already made", color=discord.Colour(0xFF0000))
         await msg.edit(embed=embed)
+        await ctx.message.author.add_roles(support)
+
     else:
         await asyncio.sleep(0.4)
 
