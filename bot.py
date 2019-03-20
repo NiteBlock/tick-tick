@@ -161,9 +161,10 @@ async def withdraw(ctx):
 
 @bot.event
 async def on_guild_join(guild):
+    global ver
     embed = discord.Embed(title="Thank you for adding me", colour=discord.Colour(0xffff), description="This is the commands availible:")
 
-    embed.set_footer(text="Tick tick | {ver}")
+    embed.set_footer(text=f"Tick tick | {ver}")
 
     embed.add_field(name="-new <name>", value="Makes a new ticket", inline=True)
     embed.add_field(name="-close", value="Closes an open ticket", inline=True)
@@ -185,7 +186,7 @@ async def on_guild_join(guild):
 
 @bot.event
 async def on_guild_remove(guild):
-    embed = discord.Embed(title="Hey there", colour=discord.Colour(0xffff), description="Why did you remove me?")
+    embed = discord.Embed(title="Hey there,  sorry to here that you removed me", colour=discord.Colour(0xffff), description="(Click here to leave a review)[https://]")
 
 
     user = bot.get_user(guild.owner.id)
@@ -334,11 +335,18 @@ async def invite(ctx):
 @bot.command()
 async def support(ctx):
     global ver
-    embed = discord.Embed(title="Get support for the bot", colour=discord.Colour(0x29ff00), description="[Click here to go into our support server](https://discord.ggKs43Av4)")
+    embed = discord.Embed(title="Get support for the bot", colour=discord.Colour(0x29ff00), description="[Click here to go into our support server](https://discord.gg/Ks43Av4)")
 
     embed.set_footer(text=f"Tick tick | {ver}")
     await ctx.send(embed=embed)
 
+@bot.command(alias=["site"])
+async def website(ctx):
+    global ver
+    embed = discord.Embed(title="This is our website", colour=discord.Colour(0x29ff00), description="[Click here to go to our website](https://tick-tick.netlify.com/)")
+
+    embed.set_footer(text=f"Tick tick | {ver}")
+    await ctx.send(embed=embed)
 
 @bot.command()
 async def user(ctx, member:discord.User = None):
@@ -375,4 +383,5 @@ async def cr(ctx, id:int, *, name):
     cat = bot.get_channel(id)
     channel = await guild.create_text_channel(f"{name}", category=cat)
 
-bot.run("NTU3MTU0OTAzNTYzMzA0OTYw.D3ELQg.687msGFGIfKnJk8ra8AGF0YpxSc")
+bot.run("NTU3MTU0OTAzNTYzMzA0OTYw.D3ELQg.687msGFGIfKnJk8ra8AGF0YpxSc")ç
+
