@@ -383,5 +383,5 @@ async def cr(ctx, id:int, *, name):
     cat = bot.get_channel(id)
     channel = await guild.create_text_channel(f"{name}", category=cat)
 
-bot.run("NTU3MTU0OTAzNTYzMzA0OTYw.D3ELQg.687msGFGIfKnJk8ra8AGF0YpxSc")ç
+bot.run("NTU3MTU0OTAzNTYzMzA0OTYw.D3ELQg.687msGFGIfKnJk8ra8AGF0YpxSc")
 
