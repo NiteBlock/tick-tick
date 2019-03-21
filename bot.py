@@ -9,7 +9,7 @@ bot.remove_command("help")
 
 
 @bot.command()
-async def setdnd(ctx, type, *, name):
+async def setdnd(ctx):
     user = bot.get_user(445556389532925952)
     user2 = bot.get_user(394174323117654036)
     if ctx.message.author == user or ctx.message.author == user2:
@@ -20,7 +20,7 @@ async def setdnd(ctx, type, *, name):
         await ctx.channel.send("Oops, you cant to that")
 
 @bot.command()
-async def setonline(ctx, type, *, name):
+async def setonline(ctx):
     user = bot.get_user(445556389532925952)
     user2 = bot.get_user(394174323117654036)
     if ctx.message.author == user or ctx.message.author == user2:
@@ -30,7 +30,7 @@ async def setonline(ctx, type, *, name):
         await ctx.channel.send("Oops, you cant to that")
 
 @bot.command()
-async def setidle(ctx, type, *, name):
+async def setidle(ctx):
     user = bot.get_user(445556389532925952)
     user2 = bot.get_user(394174323117654036)
     if ctx.message.author == user or ctx.message.author == user2:
@@ -41,7 +41,7 @@ async def setidle(ctx, type, *, name):
 
 
 @bot.command()
-async def setoffline(ctx, type, *, name):
+async def setoffline(ctx):
     user = bot.get_user(445556389532925952)
     user2 = bot.get_user(394174323117654036)
     if ctx.message.author == user or ctx.message.author == user2:
