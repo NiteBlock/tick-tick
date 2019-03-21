@@ -92,8 +92,8 @@ async def setupbot(ctx):
     else:
         await asyncio.sleep(0.4)
 
-        embed = discord.Embed(title="Making applications category", color=discord.Colour(0xFF0000))
-        await asyncio.sleep(0.7)
+        embed = discord.Embed(title="Making support role", color=discord.Colour(0xFF0000))
+        await asyncio.sleep(0.2)
 
         await msg.edit(embed=embed)
         support = await guild.create_role(name="Support")
