@@ -1,5 +1,5 @@
 from discord.ext import commands
-import discord, chalk, asyncio, random, time, datetime
+import discord, chalk, asyncio, random, time, datetime, logging, aiohttp
 from datetime import datetime
 
 bot = commands.Bot(command_prefix="-", status=discord.Status.idle, activity=discord.Game(name="Starting up..."))
@@ -89,7 +89,6 @@ async def setup(ctx):
         embed = discord.Embed(title="Category already made", color=discord.Colour(0xFF0000))
         await msg.edit(embed=embed)
         await ctx.message.author.add_roles(support)
-
     else:
         await asyncio.sleep(0.4)
 
@@ -408,6 +407,35 @@ async def cr(ctx, id:int, *, name):
 
     cat = bot.get_channel(id)
     channel = await guild.create_text_channel(f"{name}", category=cat)
+
+
+
+class DiscordBotsOrgAPI:
+    """Handles interactions with the discordbots.org API"""
+
+    def __init__(self, bot):
+        self.bot = bot
+        self.token = 'dbl_token'  #  set this to your DBL token
+        self.dblpy = dbl.Client(self.bot, self.token)
+        self.bot.loop.create_task(self.update_stats())
+
+    async def update_stats(self):
+        """This function runs every 30 minutes to automatically update your server count"""
+
+        while True:
+            logger.info('attempting to post server count')
+            try:
+                await self.dblpy.post_server_count()
+                logger.info('posted server count ({})'.format(len(self.bot.guilds)))
+            except Exception as e:
+                logger.exception('Failed to post server count\n{}: {}'.format(type(e).__name__, e))
+            await asyncio.sleep(1800)
+
+
+def letsgo(bot):
+    global logger
+    logger = logging.getLogger('bot')
+    bot.add_cog(DiscordBotsOrgAPI(bot))
 
 bot.run("NTU3MTU0OTAzNTYzMzA0OTYw.D3ELQg.687msGFGIfKnJk8ra8AGF0YpxSc")
 
