@@ -40,9 +40,9 @@ async def on_ready():
     await bot.change_presence(status=discord.Status.online, activity=discord.Game(name="Tick Tick"))
     ver = "Beta 1.0.0"
 
-@bot.command()
-@commands.has_permissions(manage_guild=True)
-async def setup(ctx):
+@bot.command(aliases=["setup", "start"])
+@commands.has_permissions(administrator=True)
+async def setupbot(ctx):
 
     guild = ctx.message.guild
     embed = discord.Embed(title="Setting things up", color=discord.Colour(0xFF0000))
@@ -365,7 +365,7 @@ async def support(ctx):
     embed.set_footer(text=f"Tick tick | {ver}")
     await ctx.send(embed=embed)
 
-@bot.command(alias=["site"])
+@bot.command(aliases=["site"])
 async def website(ctx):
     global ver
     embed = discord.Embed(title="This is our website", colour=discord.Colour(0x29ff00), description="[Click here to go to our website](https://tick-tick.netlify.com/)")
@@ -432,7 +432,7 @@ class DiscordBotsOrgAPI:
             await asyncio.sleep(1800)
 
 
-def letsgo(bot):
+def setup(bot):
     global logger
     logger = logging.getLogger('bot')
     bot.add_cog(DiscordBotsOrgAPI(bot))
