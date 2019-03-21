@@ -158,6 +158,8 @@ async def close(ctx):
 
         await channel.send('Your ticket will be closed')
         await channel.delete()
+        user = bot.get_user(ctx.author.id)
+
         embed = discord.Embed(title="Your ticket has been closed", colour=discord.Colour(0xf6ff), description=f"Thank you for using {ctx.message.guild.name}")
         await user.send(embed=embed)
     else:
@@ -165,28 +167,26 @@ async def close(ctx):
 
 @bot.command()
 async def withdraw(ctx):
-    channel = bot.get_channel(ctx.channel.id)       
 
+
+
+    channel = bot.get_channel(ctx.channel.id)
     if channel.category.name == "Applications":
-        await ctx.channel.send("Please type `confirm` if you wish to close this application")
+        await ctx.channel.send("Please type **-confirm** to withdraw your application")
+        
         def check(m):
-            global response
-            response = m.content.lower()
-            print(response) 
-            return m.channel == channel
+            return m.content == '-confirm' and m.channel == channel
 
-        await asyncio.sleep(0.1)
-        msg = await client.wait_for('message', check=check)
 
-        if response == "confirm":
-            await channel.delete()
-            embed = discord.Embed(title="Your application has been closed", colour=discord.Colour(0xf6ff), description=f"Thank you for using {ctx.message.guild.name}")
-            await user.send(embed=embed)
-        else:
-            await ctx.channel.send("Your application wasn't closed")
+        msg = await bot.wait_for('message', check=check)
+
+        await channel.send('Your application will be closed')
+        await channel.delete()
+        user = bot.get_user(ctx.author.id)
+        embed = discord.Embed(title="Your application has been closed", colour=discord.Colour(0xf6ff), description=f"Thank you for using {ctx.message.guild.name}")
+        await user.send(embed=embed)
     else:
         await ctx.channel.send("This is not a application...")
-
 
 
 @bot.event
@@ -399,7 +399,6 @@ async def clear(ctx):
     deleted2 = await ctx.channel.purge(limit=10000)
 
 
-
 @bot.command()
 @commands.has_any_role("Support")
 async def cr(ctx, id:int, *, name):
@@ -408,34 +407,6 @@ async def cr(ctx, id:int, *, name):
     cat = bot.get_channel(id)
     channel = await guild.create_text_channel(f"{name}", category=cat)
 
-
-
-class DiscordBotsOrgAPI:
-    """Handles interactions with the discordbots.org API"""
-
-    def __init__(self, bot):
-        self.bot = bot
-        self.token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU1NzE1NDkwMzU2MzMwNDk2MCIsImJvdCI6dHJ1ZSwiaWF0IjoxNTUzMTYyMjc3fQ.uK77F1zPIWnsZ-bPhLIWNJmsHpqq54YLjfM2npgtfas'  #  set this to your DBL token
-        self.dblpy = dbl.Client(self.bot, self.token)
-        self.bot.loop.create_task(self.update_stats())
-
-    async def update_stats(self):
-        """This function runs every 30 minutes to automatically update your server count"""
-
-        while True:
-            logger.info('attempting to post server count')
-            try:
-                await self.dblpy.post_server_count()
-                logger.info('posted server count ({})'.format(len(self.bot.guilds)))
-            except Exception as e:
-                logger.exception('Failed to post server count\n{}: {}'.format(type(e).__name__, e))
-            await asyncio.sleep(1800)
-
-
-def setup(bot):
-    global logger
-    logger = logging.getLogger('bot')
-    bot.add_cog(DiscordBotsOrgAPI(bot))
 
 bot.run("NTU3MTU0OTAzNTYzMzA0OTYw.D3ELQg.687msGFGIfKnJk8ra8AGF0YpxSc")
 
