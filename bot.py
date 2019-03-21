@@ -1,5 +1,5 @@
 from discord.ext import commands
-import discord, chalk, asyncio, random, time, datetime, logging, aiohttp
+import discord, chalk, asyncio, random, time, datetime
 from datetime import datetime
 
 bot = commands.Bot(command_prefix="-", status=discord.Status.idle, activity=discord.Game(name="Starting up..."))
@@ -7,6 +7,48 @@ client = discord.Client()
 
 bot.remove_command("help")
 
+
+@bot.command()
+async def setdnd(ctx, type, *, name):
+    user = bot.get_user(445556389532925952)
+    user2 = bot.get_user(394174323117654036)
+    if ctx.message.author == user or ctx.message.author == user2:
+        await bot.change_presence(status=discord.Status.dnd)
+        await ctx.send("Changed the status to **Do not disturb**")
+
+    else:
+        await ctx.channel.send("Oops, you cant to that")
+
+@bot.command()
+async def setonline(ctx, type, *, name):
+    user = bot.get_user(445556389532925952)
+    user2 = bot.get_user(394174323117654036)
+    if ctx.message.author == user or ctx.message.author == user2:
+        await bot.change_presence(status=discord.Status.online)
+        await ctx.send("Changed the status to **Online**")
+    else:
+        await ctx.channel.send("Oops, you cant to that")
+
+@bot.command()
+async def setidle(ctx, type, *, name):
+    user = bot.get_user(445556389532925952)
+    user2 = bot.get_user(394174323117654036)
+    if ctx.message.author == user or ctx.message.author == user2:
+        await bot.change_presence(status=discord.Status.idle)
+        await ctx.send("Changed the status to **Idle**")
+    else:
+        await ctx.channel.send("Oops, you cant to that")
+
+
+@bot.command()
+async def setoffline(ctx, type, *, name):
+    user = bot.get_user(445556389532925952)
+    user2 = bot.get_user(394174323117654036)
+    if ctx.message.author == user or ctx.message.author == user2:
+        await bot.change_presence(status=discord.Status.offline)
+        await ctx.send("Changed the status to **Offline**")
+    else:
+        await ctx.channel.send("Oops, you cant to that")
 
 @bot.command()
 async def setstatus(ctx, type, *, name):
