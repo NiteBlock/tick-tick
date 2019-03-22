@@ -1,6 +1,7 @@
 from discord.ext import commands
 import discord, chalk, asyncio, random, time, datetime
 from datetime import datetime
+import ast
 
 bot = commands.Bot(command_prefix="-", status=discord.Status.idle, activity=discord.Game(name="Starting up..."))
 client = discord.Client()
@@ -143,10 +144,9 @@ async def setupbot(ctx):
 
 
     embed = discord.Embed(title="Done! make sure you set the permsissions for the categories", color=discord.Colour(0x00ff00), description="Do -help to get started")
-    embed.set_footer(text="We have finished setting things up for you")
+    embed.set_footer(text="Remember to do -setticket <type>")
 
     await msg.edit(embed=embed)
-
 
 
 
@@ -258,11 +258,8 @@ async def on_guild_join(guild):
 
 @bot.event
 async def on_guild_remove(guild):
-    embed = discord.Embed(title="Hey there,  sorry to here that you removed me", colour=discord.Colour(0xffff), description="(Click here to leave a review)[https://]")
-
-
     user = bot.get_user(guild.owner.id)
-    await user.send(embed=embed)
+
     channel = bot.get_channel(557474056371437568)
     embed = discord.Embed(title="Removed to a server", colour=discord.Colour(0xFF0000), description=f"Total servers {len(bot.guilds)}")
 
@@ -271,6 +268,11 @@ async def on_guild_remove(guild):
     embed.add_field(name=f"Name: {guild.name}", value=f"Id: {guild.id}")
     embed.add_field(name=f"Owner: {user.name}", value=f"Id: {user.id}")
     await channel.send(embed=embed)
+
+    embed = discord.Embed(title="Hey there, sorry to hear that you removed me", colour=discord.Colour(0xffff), description="(Click here to leave a review)[review not availible]")
+
+    await user.send(embed=embed)
+
 
 
 @bot.command(aliases=["app", "application"])
