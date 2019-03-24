@@ -234,6 +234,18 @@ async def withdraw(ctx):
 @bot.event
 async def on_guild_join(guild):
     global ver
+    user = bot.get_user(guild.owner.id)
+
+
+    channel = bot.get_channel(557474056371437568)
+    embed = discord.Embed(title="Added to a server", colour=discord.Colour(0xffff), description=f"Total servers {len(bot.guilds)}")
+
+    embed.set_footer(text=f"Tick tick | {ver}")
+    embed.add_field(name=f"Name: {guild.name}", value=f"Id: {guild.id}")
+    embed.add_field(name=f"Owner: {user.name}", value=f"Id: {user.id}")
+
+    await channel.send(embed=embed)
+
     embed = discord.Embed(title="Thank you for adding me", colour=discord.Colour(0xffff), description="This is the commands availible:")
 
     embed.set_footer(text=f"Tick tick | {ver}")
@@ -245,16 +257,9 @@ async def on_guild_join(guild):
     embed.add_field(name="-apply <job>", value="Applies you for a job", inline=True)
     embed.add_field(name="-withdraw", value="withdraws your application for a job", inline=True)
     embed.add_field(name="-setup", value="Sets up the server with all channels, etc.", inline=True)
-    user = bot.get_user(guild.owner.id)
     await user.send(embed=embed)
-    channel = bot.get_channel(557474056371437568)
-    embed = discord.Embed(title="Added to a server", colour=discord.Colour(0xffff), description=f"Total servers {len(bot.guilds)}")
 
-    embed.set_footer(text=f"Tick tick | {ver}")
 
-    embed.add_field(name=f"Name: {guild.name}", value=f"Id: {guild.id}")
-    embed.add_field(name=f"Owner: {user.name}", value=f"Id: {user.id}")
-    await channel.send(embed=embed)
 
 @bot.event
 async def on_guild_remove(guild):
@@ -389,6 +394,8 @@ async def bug(ctx, *, name):
     channel = bot.get_channel(557505096557264896)
     await ctx.send(f"Your bug has been sent to {channel.mention}")
     embed = discord.Embed(title=f"{ctx.mesage.author.name} reported a bug", colour=discord.Colour(0xffff), description=f"{name}")
+    channel = bot.get_channel(557505096557264896)
+
     await channel.send(embed=embed)
 
 
