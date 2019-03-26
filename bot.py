@@ -374,15 +374,6 @@ async def user(ctx, member:discord.User = None):
     await ctx.channel.send(f"{pronoun} name is {name} and thier id is {member.id}. {pronoun} status is {status}. They joined at {joined}. {pronoun} rank is {role}.")
 
 
-@bot.command()
-@commands.has_any_role("Support")
-async def clear(ctx):
-    deleted = await ctx.channel.purge(limit=10000)
-    embed = discord.Embed(title=f"Cleared all of the messages", colour=discord.Colour(0x9adc86))
-    embed.set_footer(text="Message will delete in 10 secs with all other messages sent.")
-    await ctx.channel.send(embed=embed)
-    await asyncio.sleep(10)
-    deleted2 = await ctx.channel.purge(limit=10000)
 
 
 @bot.command()
@@ -392,6 +383,52 @@ async def cr(ctx, id:int, *, name):
 
     cat = bot.get_channel(id)
     channel = await guild.create_text_channel(f"{name}", category=cat)
+
+
+@bot.command()
+@commands.has_permissions(manage_messages=True)
+async def clear(ctx, amount:int=None):
+    await ctx.message.delete()
+    if amount == None:
+        await ctx.send("Please tell me an amount")
+    else:
+        await ctx.channel.purge(limit=amount)
+        embed = discord.Embed(title=f"Cleared {amount} messages", colour=discord.Colour(0x9adc86))
+        embed.set_footer(text="Message will delete in 10 seconds.")
+        msg = await ctx.channel.send(embed=embed)
+        await asyncio.sleep(1)
+        embed.set_footer(text="Message will delete in 9 seconds.")
+        await msg.edit(embed=embed)
+        await asyncio.sleep(1)
+        embed.set_footer(text="Message will delete in 8 seconds.")
+        await msg.edit(embed=embed)
+        await msg.edit(embed=embed)
+        await asyncio.sleep(1)
+        embed.set_footer(text="Message will delete in 7 seconds.")
+        await msg.edit(embed=embed)
+        await asyncio.sleep(1)
+        embed.set_footer(text="Message will delete in 6 seconds.")
+        await msg.edit(embed=embed)
+        await asyncio.sleep(1)
+        embed.set_footer(text="Message will delete in 5 seconds.")
+        await msg.edit(embed=embed)
+        await msg.edit(embed=embed)
+        await asyncio.sleep(1)
+        embed.set_footer(text="Message will delete in 4 seconds.")
+        await msg.edit(embed=embed)
+        await asyncio.sleep(1)
+        embed.set_footer(text="Message will delete in 3 seconds.")
+        await msg.edit(embed=embed)
+        await asyncio.sleep(1)
+        embed.set_footer(text="Message will delete in 2 seconds.")
+        await msg.edit(embed=embed)
+        await msg.edit(embed=embed)
+        await asyncio.sleep(1)
+        embed.set_footer(text="Message will delete in 1 seconds.")
+        await msg.edit(embed=embed)     
+        await asyncio.sleep(1)
+   
+        await msg.delete()
 
 
 @bot.command()
@@ -442,6 +479,6 @@ async def setstatus(ctx, status, type, *, name):
             await ctx.channel.send("Not a valid type of status")
     else:
         await ctx.channel.send("Oops, you cant to that")
-        
+
 bot.run("NTU3MTU0OTAzNTYzMzA0OTYw.D3ELQg.687msGFGIfKnJk8ra8AGF0YpxSc")
 
