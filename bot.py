@@ -9,54 +9,6 @@ client = discord.Client()
 bot.remove_command("help")
 
 
-@bot.command()
-async def setstatus(ctx, status, type, *, name):
-    user = bot.get_user(445556389532925952)
-    user2 = bot.get_user(394174323117654036)
-    if ctx.message.author == user or ctx.message.author == user2:
-        
-        if type == "listening":
-            if status == "Online":
-                await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=f"{name}"), status=discord.Status.online)
-                await ctx.channel.send(f"Set the status to **Listening to {name}** and **Online**")
-            elif status == "dnd":
-                await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=f"{name}"), status=discord.Status.dnd)
-                await ctx.channel.send(f"Set the status to **Listening to {name}** and **DND**")
-            elif status == "idle":
-                await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=f"{name}"), status=discord.Status.idle)
-                await ctx.channel.send(f"Set the status to **Listening to {name}** and **Idle**")
-            else:
-                await ctx.send("Not a valid status")
-        elif type == "watching":
-            if status == "Online":
-                await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{name}"), status=discord.Status.online)
-                await ctx.channel.send(f"Set the status to **Watching to {name}** and **Online**")ç
-            elif status == "dnd":
-                await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{name}"), status=discord.Status.dnd)
-                await ctx.channel.send(f"Set the status to **Watching to {name}** and **DND**")
-            elif status == "idle":
-                await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{name}"), status=discord.Status.idle)
-                await ctx.channel.send(f"Set the status to **Watching to {name}** and **Idle**")
-            else:
-                await ctx.send("Not a valid status")
-        elif type == "playing":
-            if status == "Online":
-                await bot.change_presence(activity=discord.Game(name=f"{name}"), status=discord.Status.online)
-                await ctx.channel.send(f"Set the status to **Playing to {name}** and **Online**")ç
-            elif status == "dnd":
-                await bot.change_presenceactivity=discord.Game(name=f"{name}"), status=discord.Status.dnd)
-                await ctx.channel.send(f"Set the status to **Playing to {name}** and **DND**")
-            elif status == "idle":
-                await bot.change_presence(activity=discord.Game(name=f"{name}"), status=discord.Status.idle)
-                await ctx.channel.send(f"Set the status to **Playing to {name}** and **Idle**")
-        elif type == "show":
-            if name == "guilds":
-                await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching,name=f"{len(bot.guilds)} servers"))
-                await ctx.channel.send(f"Set the status to **watching `guild amount` servers** and **Online**")
-        else:
-            await ctx.channel.send("Not a valid type of status")
-    else:
-        await ctx.channel.send("Oops, you cant to that")
 
 @bot.event
 async def on_ready():
@@ -442,5 +394,54 @@ async def cr(ctx, id:int, *, name):
     channel = await guild.create_text_channel(f"{name}", category=cat)
 
 
+@bot.command()
+async def setstatus(ctx, status, type, *, name):
+    user = bot.get_user(445556389532925952)
+    user2 = bot.get_user(394174323117654036)
+    if ctx.message.author == user or ctx.message.author == user2:
+        
+        if type == "listening":
+            if status == "Online":
+                await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=f"{name}"), status=discord.Status.online)
+                await ctx.channel.send(f"Set the status to **Listening to {name}** and **Online**")
+            elif status == "dnd":
+                await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=f"{name}"), status=discord.Status.dnd)
+                await ctx.channel.send(f"Set the status to **Listening to {name}** and **DND**")
+            elif status == "idle":
+                await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=f"{name}"), status=discord.Status.idle)
+                await ctx.channel.send(f"Set the status to **Listening to {name}** and **Idle**")
+            else:
+                await ctx.send("Not a valid status")
+        elif type == "watching":
+            if status == "Online":
+                await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{name}"), status=discord.Status.online)
+                await ctx.channel.send(f"Set the status to **Watching to {name}** and **Online**")
+            elif status == "dnd":
+                await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{name}"), status=discord.Status.dnd)
+                await ctx.channel.send(f"Set the status to **Watching to {name}** and **DND**")
+            elif status == "idle":
+                await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{name}"), status=discord.Status.idle)
+                await ctx.channel.send(f"Set the status to **Watching to {name}** and **Idle**")
+            else:
+                await ctx.send("Not a valid status")
+        elif type == "playing":
+            if status == "Online":
+                await bot.change_presence(activity=discord.Game(name=f"{name}"), status=discord.Status.online)
+                await ctx.channel.send(f"Set the status to **Playing to {name}** and **Online**")
+            elif status == "dnd":
+                await bot.change_presence(activity=discord.Game(name=f"{name}"), status=discord.Status.dnd)
+                await ctx.channel.send(f"Set the status to **Playing to {name}** and **DND**")
+            elif status == "idle":
+                await bot.change_presence(activity=discord.Game(name=f"{name}"), status=discord.Status.idle)
+                await ctx.channel.send(f"Set the status to **Playing to {name}** and **Idle**")
+        elif type == "show":
+            if name == "guilds":
+                await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching,name=f"{len(bot.guilds)} servers"))
+                await ctx.channel.send(f"Set the status to **watching `guild amount` servers** and **Online**")
+        else:
+            await ctx.channel.send("Not a valid type of status")
+    else:
+        await ctx.channel.send("Oops, you cant to that")
+        
 bot.run("NTU3MTU0OTAzNTYzMzA0OTYw.D3ELQg.687msGFGIfKnJk8ra8AGF0YpxSc")
 
