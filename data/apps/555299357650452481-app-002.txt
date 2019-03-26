@@ -1,0 +1,1 @@
+{'guild': 555299357650452481, 'owner': 445556389532925952, 'reason': 'dev', 'channelcreated': 560139646873370624, 'ticketnum': '002', 'ticketchannel': 560140194477637634}

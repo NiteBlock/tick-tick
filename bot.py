@@ -1,7 +1,7 @@
+import discord, chalk, asyncio, random, time, datetime, ast
 from discord.ext import commands
-import discord, chalk, asyncio, random, time, datetime
+
 from datetime import datetime
-import ast
 
 bot = commands.Bot(command_prefix="-", status=discord.Status.idle, activity=discord.Game(name="Starting up..."))
 client = discord.Client()
@@ -10,66 +10,49 @@ bot.remove_command("help")
 
 
 @bot.command()
-async def setdnd(ctx):
+async def setstatus(ctx, status, type, *, name):
     user = bot.get_user(445556389532925952)
     user2 = bot.get_user(394174323117654036)
     if ctx.message.author == user or ctx.message.author == user2:
-        await bot.change_presence(status=discord.Status.dnd)
-        await ctx.send("Changed the status to **Do not disturb**")
-
-    else:
-        await ctx.channel.send("Oops, you cant to that")
-
-@bot.command()
-async def setonline(ctx):
-    user = bot.get_user(445556389532925952)
-    user2 = bot.get_user(394174323117654036)
-    if ctx.message.author == user or ctx.message.author == user2:
-        await bot.change_presence(status=discord.Status.online)
-        await ctx.send("Changed the status to **Online**")
-    else:
-        await ctx.channel.send("Oops, you cant to that")
-
-@bot.command()
-async def setidle(ctx):
-    user = bot.get_user(445556389532925952)
-    user2 = bot.get_user(394174323117654036)
-    if ctx.message.author == user or ctx.message.author == user2:
-        await bot.change_presence(status=discord.Status.idle)
-        await ctx.send("Changed the status to **Idle**")
-    else:
-        await ctx.channel.send("Oops, you cant to that")
-
-
-@bot.command()
-async def setoffline(ctx):
-    user = bot.get_user(445556389532925952)
-    user2 = bot.get_user(394174323117654036)
-    if ctx.message.author == user or ctx.message.author == user2:
-        await bot.change_presence(status=discord.Status.offline)
-        await ctx.send("Changed the status to **Offline**")
-    else:
-        await ctx.channel.send("Oops, you cant to that")
-
-@bot.command()
-async def setstatus(ctx, type, *, name):
-    user = bot.get_user(445556389532925952)
-    user2 = bot.get_user(394174323117654036)
-    if ctx.message.author == user or ctx.message.author == user2:
-
+        
         if type == "listening":
-            await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=f"{name}"))
-            await ctx.channel.send(f"Set the status to **Listening to {name}**")
+            if status == "Online":
+                await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=f"{name}"), status=discord.Status.online)
+                await ctx.channel.send(f"Set the status to **Listening to {name}** and **Online**")
+            elif status == "dnd":
+                await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=f"{name}"), status=discord.Status.dnd)
+                await ctx.channel.send(f"Set the status to **Listening to {name}** and **DND**")
+            elif status == "idle":
+                await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=f"{name}"), status=discord.Status.idle)
+                await ctx.channel.send(f"Set the status to **Listening to {name}** and **Idle**")
+            else:
+                await ctx.send("Not a valid status")
         elif type == "watching":
-            await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{name}"))
-            await ctx.channel.send(f"Set the status to **Watching {name}**")
+            if status == "Online":
+                await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{name}"), status=discord.Status.online)
+                await ctx.channel.send(f"Set the status to **Watching to {name}** and **Online**")ç
+            elif status == "dnd":
+                await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{name}"), status=discord.Status.dnd)
+                await ctx.channel.send(f"Set the status to **Watching to {name}** and **DND**")
+            elif status == "idle":
+                await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{name}"), status=discord.Status.idle)
+                await ctx.channel.send(f"Set the status to **Watching to {name}** and **Idle**")
+            else:
+                await ctx.send("Not a valid status")
         elif type == "playing":
-            await bot.change_presence(activity=discord.Game(name=f"{name}"))
-            await ctx.channel.send(f"Set the status to **playing {name}**")
+            if status == "Online":
+                await bot.change_presence(activity=discord.Game(name=f"{name}"), status=discord.Status.online)
+                await ctx.channel.send(f"Set the status to **Playing to {name}** and **Online**")ç
+            elif status == "dnd":
+                await bot.change_presenceactivity=discord.Game(name=f"{name}"), status=discord.Status.dnd)
+                await ctx.channel.send(f"Set the status to **Playing to {name}** and **DND**")
+            elif status == "idle":
+                await bot.change_presence(activity=discord.Game(name=f"{name}"), status=discord.Status.idle)
+                await ctx.channel.send(f"Set the status to **Playing to {name}** and **Idle**")
         elif type == "show":
             if name == "guilds":
                 await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching,name=f"{len(bot.guilds)} servers"))
-                await ctx.channel.send(f"Set the status to **watching `guild amount` servers**")
+                await ctx.channel.send(f"Set the status to **watching `guild amount` servers** and **Online**")
         else:
             await ctx.channel.send("Not a valid type of status")
     else:
@@ -129,7 +112,7 @@ async def setupbot(ctx):
         await msg.edit(embed=embed)
         await asyncio.sleep(0.6)
 
-        embed = discord.Embed(title="Category already made", color=discord.Colour(0xFF0000))
+        embed = discord.Embed(title="Role already made", color=discord.Colour(0xFF0000))
         await msg.edit(embed=embed)
         await ctx.message.author.add_roles(support)
     else:
@@ -266,7 +249,7 @@ async def on_guild_remove(guild):
     user = bot.get_user(guild.owner.id)
 
     channel = bot.get_channel(557474056371437568)
-    embed = discord.Embed(title="Removed to a server", colour=discord.Colour(0xFF0000), description=f"Total servers {len(bot.guilds)}")
+    embed = discord.Embed(title="Removed from a server", colour=discord.Colour(0xFF0000), description=f"Total servers {len(bot.guilds)}")
 
     embed.set_footer(text=f"Tick tick | {ver}")
 
