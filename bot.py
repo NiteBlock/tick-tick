@@ -908,15 +908,64 @@ async def on_command_error(ctx, error):
 
         embed.set_footer(text=f"Tick Tick | {ver}")
         await ctx.send(embed=embed)
+    else:
+        print(f"{error} happend in {ctx.channel}")
+        embed = discord.Embed(title="Error! Something happend!", colour=discord.Colour(0xff0000), description=f"If this error happens a lot then report it in our support server using -support ```{error}```")
 
-    print(f"{error} happend in {ctx.channel}")
-    embed = discord.Embed(title="Error! Something happend!", colour=discord.Colour(0xff0000), description=f"If this error happens a lot then report it in our support server using -support ```{error}```")
+        embed.set_footer(text=f"Tick Tick | {ver}")
+        await ctx.send(embed=embed)
+        n = random.randint(1,23743852)
+        f = open(f"./data/errors/{n}log.txt", "w")
+        f.write(f"{error} happend in {ctx}")
+        f.close()
 
-    embed.set_footer(text=f"Tick Tick | {ver}")
-    await ctx.send(embed=embed)
-    n = random.randint(1,23743852)
-    f = open(f"./data/errors/{n}log.txt", "w")
-    f.write(f"{error} happend in {ctx}")
-    f.close()
+
+@bot.event
+async def on_guild_join(guild):
+    global ver
+    user = bot.get_user(guild.owner.id)
+
+
+    channel = bot.get_channel(557474056371437568)
+    embed = discord.Embed(title="Added to a server", colour=discord.Colour(0xffff), description=f"Total servers {len(bot.guilds)}")
+
+    embed.set_footer(text=f"Tick tick | {ver}")
+    embed.add_field(name=f"Name: {guild.name}", value=f"Id: {guild.id}")
+    embed.add_field(name=f"Owner: {user.name}", value=f"Id: {user.id}")
+
+    await channel.send(embed=embed)
+
+    embed = discord.Embed(title="Thank you for adding me", colour=discord.Colour(0xffff), description="This is the commands availible:")
+
+    embed.set_footer(text=f"Tick tick | {ver}")
+
+    embed.add_field(name="-new <name>", value="Makes a new ticket", inline=True)
+    embed.add_field(name="-close", value="Closes an open ticket", inline=True)
+    embed.add_field(name="-add <user>", value="Adds a user to your ticket", inline=True)
+    embed.add_field(name="-remove <user>", value="removes a user from your ticket", inline=True)
+    embed.add_field(name="-apply <job>", value="Applies you for a job", inline=True)
+    embed.add_field(name="-withdraw", value="withdraws your application for a job", inline=True)
+    embed.add_field(name="-setup", value="Sets up the server with all channels, etc.", inline=True)
+    await user.send(embed=embed)
+
+
+
+@bot.event
+async def on_guild_remove(guild):
+    user = bot.get_user(guild.owner.id)
+
+    channel = bot.get_channel(557474056371437568)
+    embed = discord.Embed(title="Removed from a server", colour=discord.Colour(0xFF0000), description=f"Total servers {len(bot.guilds)}")
+
+    embed.set_footer(text=f"Tick tick | {ver}")
+
+    embed.add_field(name=f"Name: {guild.name}", value=f"Id: {guild.id}")
+    embed.add_field(name=f"Owner: {user.name}", value=f"Id: {user.id}")
+    await channel.send(embed=embed)
+
+    embed = discord.Embed(title="Hey there, sorry to hear that you removed me", colour=discord.Colour(0xffff), description="(Click here to leave a review)[review not availible]")
+
+    await user.send(embed=embed)
+
 
 bot.run("NTU3MTU0OTAzNTYzMzA0OTYw.D3ELQg.687msGFGIfKnJk8ra8AGF0YpxSc")
