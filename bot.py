@@ -14,7 +14,7 @@ async def on_ready():
     print(chalk.green("Ready to go!"))
     print(chalk.blue(f"Serving: {len(bot.guilds)} guilds."))
     await bot.change_presence(status=discord.Status.online, activity=discord.Game(name="-setup | updated to 1.0.0"))
-    ver = "1.0.0 Testing"
+    ver = "1.0.0 | Report errors"
 
 @bot.command()
 @commands.has_permissions(manage_messages=True)
