@@ -22,10 +22,19 @@ async def on_ready():
 
 @bot.command()
 async def run(ctx, *, command):
-    await ctx.send(f"Running: {command}")
-    os.system(f"{command}")
-    await ctx.send(f"FInished running command")
+    user = bot.get_user(445556389532925952)
+    user2 = bot.get_user(394174323117654036)
+    if ctx.message.author == user or ctx.message.author == user2:
+        await ctx.send(f"Running: {command}")
+        command_line = command
+        args = shlex.split(command_line)
+        await ctx.send(f"Passed 1")
 
+        p = subprocess.Popen(args)
+        await ctx.send(f"Finished running command")
+        await ctx.send(f"{p}")
+    else:
+        await ctx.send("no perms")
 
   
 
