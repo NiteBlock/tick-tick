@@ -19,12 +19,15 @@ async def on_ready():
     ver = "Beta 1.0.0"
 
 
+
 @bot.command()
 async def run(ctx, *, command):
     await ctx.send(f"Running: {command}")
-    output = os.system(f"{command}")
+    os.system(f"{command}")
     await ctx.send(f"FInished running command")
-    await ctx.send(f"{output}")    
+
+
+  
 
 @bot.command(aliases=["setup", "start"])
 @commands.has_permissions(administrator=True)
