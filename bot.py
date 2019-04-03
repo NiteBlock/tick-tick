@@ -3,6 +3,13 @@ from discord.ext import commands
 
 from datetime import datetime as dt
 
+async def get_pre(bot, message):
+    guild = bot.get_guild(557131067169964033)
+    if message.guild == guild:
+        return "b-"
+    else:
+        return "-"
+
 bot = commands.Bot(command_prefix=commands.when_mentioned_or('-'), status=discord.Status.idle, activity=discord.Game(name="Starting up..."))
 client = discord.Client()
 
