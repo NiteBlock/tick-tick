@@ -1172,4 +1172,4 @@ async def resetall(ctx):
 
 
 
-bot.run("NTY0MDYyODIwNzUzNDczNTU3.XKiavA.XjJegHBy5jjO0lFr749zdIN46IM")
+bot.run("")
